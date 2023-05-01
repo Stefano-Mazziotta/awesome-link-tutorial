@@ -1,7 +1,7 @@
 import { AwesomeLinkProps } from "@/types/awesomeLink"
 import Image from "next/image"
 
-export function AwesomeLink({ id, imageUrl, description, category, title, url }:AwesomeLinkProps ) {
+export default function AwesomeLink({ id, imageUrl, description, category, title, url }:AwesomeLinkProps ) {
     return (
         <li key={id} className="shadow max-w-md rounded">
             <Image src={imageUrl} alt={description} className='shadow-sm' width={500} height={300} />

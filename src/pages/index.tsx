@@ -4,9 +4,8 @@ import { Inter } from 'next/font/google'
 
 import { gql, useQuery } from '@apollo/client'
 import type { Link } from '@prisma/client'
-import { AwesomeLink } from '@/components/AwesomeLink'
 
-const inter = Inter({ subsets: ['latin'] })
+import AwesomeLink from '@/components/AwesomeLink'
 
 const AllLinksQuery = gql`
   query allLinksQuery($first: Int, $after: ID) {
