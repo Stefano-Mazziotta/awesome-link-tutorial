@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    
     const { email, secret } = req.body
 
     // 1. Validates the request is a POST request

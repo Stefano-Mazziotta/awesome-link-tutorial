@@ -18,3 +18,9 @@ Part 2.
 - How to add support for pagination in your API and how to send paginated query from the client
 
 Part 3.
+- How to add authentication and authorization to a Next.js app using Auth0.
+- How you can use Auth0 Actions to add users to your database.
+- Add Links to database only for admin user.
+- Code an action in Auth0 dashboard.
+
+Part 4.
