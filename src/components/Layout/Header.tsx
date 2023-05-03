@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Header() {
@@ -37,7 +38,7 @@ export default function Header() {
                             <Link href="/api/auth/logout" className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                                 Logout
                             </Link>
-                            <img alt="profile" className="rounded-full w-12 h-12" src={user.picture ? user.picture : ''} />
+                            <Image alt="profile" className="rounded-full w-12 h-12" src={user.picture ? user.picture : ''} width={100} height={100}/>
                         </div>
                     ) : (
                         <Link href="/api/auth/login" className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
