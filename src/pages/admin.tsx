@@ -2,7 +2,7 @@ import React from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
-import { GetSession, getSession } from '@auth0/nextjs-auth0'
+import { getSession } from '@auth0/nextjs-auth0'
 import prisma from '@/lib/prisma'
 import type { GetServerSideProps } from 'next'
 
@@ -34,13 +34,42 @@ export default function Admin() {
         reset,
     } = useForm<FormValues>()
 
+    const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length <= 0) return
+
+        const file = e.target.files[0]
+        const filename = encodeURIComponent(file.name)
+
+        const res = await fetch(`/api/upload-image?file=${filename}`)
+        const data = await res.json()
+
+        const formData = new FormData()
+
+        Object.entries({ ...data.fields, file }).forEach(([key, value]) => {
+            // @ts-ignore
+            formData.append(key, value)
+        })
+
+        toast.promise(
+            fetch(data.url, {
+                method: 'POST',
+                body: formData,
+            }),
+            {
+                loading: 'Uploading...',
+                success: 'Image successfully uploaded! 🎉',
+                error: `Upload failed 😥 Please try again ${error}`,
+            }
+        )
+    }
+
     const [createLink, { loading, error }] = useMutation(CreateLinkMutation, {
         onCompleted: () => reset()
     })
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        const { title, url, category, description } = data
-        const imageUrl = `https://via.placeholder.com/300`
+        const { title, url, category, description, image } = data
+        const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${image[0]?.name}`
         const variables = { title, url, category, description, imageUrl }
 
         try {
@@ -101,6 +130,17 @@ export default function Admin() {
                     />
                 </label>
 
+                <label className="block">
+                    <span className="text-gray-700">Upload a .png or .jpg image (max 1MB).</span>
+                    <input
+                        {...register('image', { required: true })}
+                        onChange={uploadPhoto}
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        name="image"
+                    />
+                </label>
+
                 <button
                     disabled={loading}
                     type="submit"
@@ -130,7 +170,7 @@ export default function Admin() {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const session = await getSession(req, res);
 
-    if (!session){
+    if (!session) {
         return {
             redirect: {
                 permanent: false,
@@ -142,21 +182,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     const user = await prisma.user.findUnique({
         select: {
-          email: true,
-          role: true,
+            email: true,
+            role: true,
         },
         where: {
-          email: session.user.email,
+            email: session.user.email,
         },
     });
 
     if (!user || user.role !== 'ADMIN') {
         return {
-          redirect: {
-            permanent: false,
-            destination: '/404',
-          },
-          props: {},
+            redirect: {
+                permanent: false,
+                destination: '/404',
+            },
+            props: {},
         };
     }
 

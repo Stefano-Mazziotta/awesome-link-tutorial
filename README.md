@@ -2,7 +2,7 @@
 
 Tutorial for learn how to build "awesome-links", a fullstack app where users can browse through a list of curated links and bookmark their favorite ones.
 
-Made with Nextjs, Typescript, GraphQL, Prisma, Postgresql :)
+Made with Nextjs 12, Typescript, GraphQL, Prisma, Postgresql :)
 
 # Tutorial iterations
 
@@ -24,3 +24,4 @@ Part 3.
 - Code an action in Auth0 dashboard.
 
 Part 4.
+- Learned how to add support for image upload using AWS S3.
